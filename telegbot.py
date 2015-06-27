@@ -1,14 +1,19 @@
 #!/usr/bin/python
-
 import urllib.request
 import json
 import yaml
 import string
 
-
 class telegbot:
     def __init__(self):
         self.config = yaml.load(open("config.yml", 'r'))
+        self.data = self.getBotData()
+        self.on_receive_message = self.void_callback
+        self.on_new_chat_participant = self.void_callback
+        self.quit = False
+        print(self.data)
+    
+    def void_callback(self, data={}):
         return
     
     def apiRequest(self, method, parameters = {}):
