@@ -1,6 +1,290 @@
 botData:
   token: "TOKEN HERE"
+
 emoti:
   numberModifier: "⃣"
 telegramBotApi:
   api_url: "https://api.telegram.org/bot{token}/{method}"
+  methods:
+    getUpdates:
+      method: getUpdates
+      description: Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned.
+      action: get
+      doc: "https://core.telegram.org/bots/api#getting-updates"
+      parameters:
+        offset:
+          parameter: offset
+          type: int
+          required: false
+          description: Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an offset higher than its update_id.
+        limit:
+          parameter: limit
+          type: int
+          required: false
+          description: Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100
+        timeout:
+          parameter: timeout
+          type: int
+          required: false
+          description: Timeout in seconds for long polling. Defaults to 0, i.e. usual short polling
+    getMe:
+      method: getMe
+      description: A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
+      action: get
+      doc: "https://core.telegram.org/bots/api#getme"
+      parameters:
+    sendMessage:
+      method: sendMessage
+      description: Use this method to send text messages. On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendMessage"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        text:
+          parameter: text
+          type: str
+          required: true
+          description: Text of the message to be sent
+        disable_web_page_preview:
+          parameter: disable_web_page_preview
+          type: bool
+          required: false
+          description: Disables link previews for links in this message
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: str
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    forwardMessage:
+      method: forwardMessage
+      description: Use this method to forward messages of any kind. On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#forwardMessage"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        from_chat_id:
+          parameter: from_chat_id
+          type: int
+          required: true
+          description: Unique identifier for the chat where the original message was sent. User or GroupChat id
+        message_id:
+          parameter: message_id
+          type: int
+          required: true
+          description: Unique message identifier
+    sendPhoto:
+      method: sendPhoto
+      description: Use this method to send photos. On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendPhoto"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        photo:
+          parameter: 
+          type: InputFile
+          required: true
+          description: Photo to send. You can either pass a file_id as String to resend a photo that is already on the Telegram servers, or upload a new photo using multipart/form-data.
+        caption:
+          parameter: caption
+          type: str
+          required: false
+          description: Photo caption (may also be used when resending photos by file_id).
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendAudio:
+      method: sendAudio
+      description: Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Document). On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendAudio"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        audio:
+          parameter: audio
+          type: InputFile
+          required: true
+          description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendDocument:
+      method: sendDocument
+      description: Use this method to send general files. On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendDocument"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        document:
+          parameter: document
+          type: InputFile
+          required: true
+          description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendSticker:
+      method: sendSticker
+      description: Use this method to send .webp stickers. On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendSticker"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        sticker:
+          parameter: sticker
+          type: InputFile
+          required: true
+          description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendVideo:
+      method: sendVideo
+      description: Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendVideo"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        video:
+          parameter: video
+          type: InputFile
+          required: true
+          description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendLocation:
+      method: sendLocation
+      description: Use this method to send point on the map. On success, the sent Message is returned.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendLocation"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        latitude:
+          parameter: latitude
+          type: float
+          required: true
+          description: Latitude of location
+        longitude:
+          parameter: longitude
+          type: float
+          required: true
+          description: longitude of location
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendChatAction:
+      method: sendChatAction
+      description: Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status).
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendChatAction"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        action:
+          parameter: action
+          type: str
+          required: true
+          description: "Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_audio or upload_audio for audio files, upload_document for general files, find_location for location data."
+    getUserProfilePhotos:
+      method: getUserProfilePhotos
+      description: Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.
+      action: get
+      doc: "https://core.telegram.org/bots/api#getUserProfilePhotos"
+      parameters:
+        user_id:
+          parameter: user_id
+          type: int
+          required: true
+          description: Unique identifier of the target user
+        offset:
+          parameter: offset
+          type: int
+          required: false
+          description: Sequential number of the first photo to be returned. By default, all photos are returned.
+        limit:
+          parameter: limit
+          type: int
+          required: true
+          description: Limits the number of photos to be retrieved. Values between 1—100 are accepted. Defaults to 100.
