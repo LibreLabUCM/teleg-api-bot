@@ -77,3 +77,18 @@ class telegbot:
             self.on_new_chat_participant(event)
         else:
             print(response)
+    def run(self):
+        lastMessage_update_id = 0
+        while (not self.quit):
+            response = self.apiRequest('getUpdates', {
+                "offset": lastMessage_update_id + 1,
+                "limit": 100,
+                "timeout": 20
+            })
+            if response["ok"]:
+                for update in response["result"]:
+                    if update["update_id"] > lastMessage_update_id:
+                        lastMessage_update_id = update["update_id"]
+                    self.runEvent(update["message"])
+    
+   
