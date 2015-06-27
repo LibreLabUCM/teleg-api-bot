@@ -1,4 +1,6 @@
 botData:
   token: "TOKEN HERE"
+emoti:
+  numberModifier: "⃣"
 telegramBotApi:
   api_url: "https://api.telegram.org/bot{token}/{method}"
