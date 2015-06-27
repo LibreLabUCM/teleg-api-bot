@@ -70,3 +70,10 @@ class telegbot:
     def sendMessage(self, chat_id)
         return
     
+    def runEvent(self, event):
+        if "text" in event:
+            self.on_receive_message(event)
+        elif "new_chat_participant" in event:
+            self.on_new_chat_participant(event)
+        else:
+            print(response)
