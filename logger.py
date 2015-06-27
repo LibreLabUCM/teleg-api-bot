@@ -26,3 +26,31 @@ class logger:
         # print(plainText)
         return
   
+    def msg(self, msg):
+        #return
+        output = ""
+        temp = ""
+        msgDirection = "?"
+        if "username" in msg["chat"]:
+            output = output + TC.ICyan + msg["chat"]["username"]
+        elif "title" in msg["chat"]:
+            output = output + TC.Cyan + msg["chat"]["title"]
+        elif "id" in msg["chat"]:
+            output = output + TC.Cyan + msg["chat"]["id"]
+        else:
+            self.log(self.error, "msg[\"chat\"] doesn't have 'username', 'title', or 'id'. msg -> " + json.dump(msg))
+        
+        output = output + TC.IGreen + " <<< " + TC.ICyan + msg["from"]["username"] + TC.Rst+TC.Rst+": "
+        
+        # if not syncFinished:
+            # output = output+"("+"old"+") "
+        if "fwd_src" in msg:
+            output = output+TC.IPurple+"[fwd "+TC.ICyan+msg["fwd_src"]["username"]+TC.IPurple+"]"+TC.Rst
+        if "reply" in msg:
+            output = output+TC.IPurple+"[reply "+TC.ICyan+str(msg["reply"]["from"]["username"])+TC.Rst+": "+TC.Yellow+utils.msgGetSummary(msg["reply"], 10)+TC.IPurple+"]"+TC.Rst
+        if "reply_id" in msg:
+            output = output+TC.IPurple+"[reply "+TC.ICyan+str(msg["reply_id"])+TC.IPurple+"]"+TC.Rst
+        output = output+TC.IYellow+utils.msgGetSummary(msg, 0)+TC.Rst
+        output = output.replace('\n', ' ').replace('\r', '')
+        self.log(self.info, output)
+        return
