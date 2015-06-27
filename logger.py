@@ -54,3 +54,4 @@ class logger:
         output = output.replace('\n', ' ').replace('\r', '')
         self.log(self.info, output)
         return
+    
