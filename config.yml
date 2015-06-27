@@ -1,0 +1,4 @@
+botData:
+  token: "TOKEN HERE"
+telegramBotApi:
+  api_url: "https://api.telegram.org/bot{token}/{method}"
