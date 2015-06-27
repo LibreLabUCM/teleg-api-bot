@@ -24,7 +24,7 @@ def receive_message(msg):
         bot.sendMessage(msg["chat"]["id"], "Text")
 
 
-bot = telegbot()
+bot = telegbot('TOKEN')
 bot.on_receive_message = receive_message
 bot.run()
 
