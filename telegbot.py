@@ -6,7 +6,8 @@ import yaml
 import string
 
 class telegbot:
-    def __init__(self):
+    def __init__(self, token):
+        self.token = token
         self.config = yaml.load(open("config.yml", 'r'))
         self.data = self.getBotData()
         self.on_receive_message = self.void_callback
@@ -56,7 +57,7 @@ class telegbot:
         return method in self.config["telegramBotApi"]["methods"]
     
     def getBotToken(self):
-        return self.config["botData"]["token"]
+        return self.token
     
     def getBotUsername(self):
         return self.data["username"]

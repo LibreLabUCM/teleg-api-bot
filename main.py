@@ -24,7 +24,7 @@ def receive_message(msg):
 def new_chat_participant(msg):
     print("Welcome @" + msg["new_chat_participant"]["username"] + " to " + msg["chat"]["title"])
 
-bot = telegbot()
+bot = telegbot('TOKEN')
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
 bot.run()
