@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import urllib.request
 import json
 import yaml
@@ -30,8 +31,6 @@ class telegbot:
         req = urllib.request.Request(url, data)
         with urllib.request.urlopen(req) as response:
             return json.loads(response.read().decode())
-            #the_page = response.read().decode()
-            #return json.dumps(json.loads(the_page))
         return False
     
     def manageParameters(self, method, parameters):
@@ -52,6 +51,7 @@ class telegbot:
                 if methodParameter["required"]:
                     return False
         return managedParams
+    
     def methodExists(self, method):
         return method in self.config["telegramBotApi"]["methods"]
     
@@ -67,9 +67,17 @@ class telegbot:
             return False
         return botData["result"]
     
-    def sendMessage(self, chat_id)
-        return
-    
+    def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
+        response = self.apiRequest('sendMessage', {
+            "chat_id": chat_id,
+            "text": text,
+            "disable_web_page_preview": disable_web_page_preview,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": reply_markup
+        })
+        
+        if response["ok"]:
+            self.runEvent(response["result"])
     def runEvent(self, event):
         if "text" in event:
             self.on_receive_message(event)
@@ -77,6 +85,7 @@ class telegbot:
             self.on_new_chat_participant(event)
         else:
             print(response)
+    
     def run(self):
         lastMessage_update_id = 0
         while (not self.quit):
@@ -91,4 +100,3 @@ class telegbot:
                         lastMessage_update_id = update["update_id"]
                     self.runEvent(update["message"])
     
-   
