@@ -8,6 +8,7 @@ import string
 
 class telegbot:
     def __init__(self):
+        self.config = yaml.load(open("config.yml", 'r'))
         return
     
     def apiRequest(self, method, parameters = {}):
