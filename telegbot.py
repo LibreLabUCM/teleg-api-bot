@@ -52,6 +52,20 @@ class telegbot:
                 if methodParameter["required"]:
                     return False
         return managedParams
+    def methodExists(self, method):
+        return method in self.config["telegramBotApi"]["methods"]
+    
+    def getBotToken(self):
+        return self.config["botData"]["token"]
+    
+    def getBotUsername(self):
+        return self.data["username"]
+    
+    def getBotData(self):
+        botData = self.apiRequest('getMe')
+        if not botData:
+            return False
+        return botData["result"]
     
     def sendMessage(self, chat_id)
         return
