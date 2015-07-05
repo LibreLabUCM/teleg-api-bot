@@ -93,7 +93,7 @@ def group_chat_created(msg):
 
 
 
-bot = telegbot('92725317:AAHH8KRReReE_gKVzwHwrki7gvAXBGM__0Q')
+bot = telegbot('TOKEN')
 
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
