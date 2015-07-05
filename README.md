@@ -1,8 +1,14 @@
 # teleg-api-bot
+
 Telegram Api for new bot system
 
-Dependencies: py-yaml
+## Getting started
 
+You should probably take a look at our [Getting Started](https://github.com/LibreLabUCM/teleg-api-bot/wiki/Getting-started-with-the-Telegram-Bot-API) wiki page.
+
+## Usage
+
+Dependencies: py-yaml
 
 "main.py" is the main file to run. It is an example of a bot.
 
