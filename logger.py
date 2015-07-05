@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 ################################################################################
 #                                                                              #
 #   logger.py                                                                  #
@@ -26,7 +29,6 @@
 ################################################################################
 
 
-#!/usr/bin/python
 from TC import TC as TC # And TC again
 from time import gmtime, strftime
 import utils

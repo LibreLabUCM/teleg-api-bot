@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 ################################################################################
 #                                                                              #
 #   telegbot.py                                                                #
@@ -25,9 +28,6 @@
 #                                                                              #
 ################################################################################
 
-
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import urllib
 import urllib.request
 import json
@@ -130,7 +130,7 @@ class telegbot:
             self.on_left_chat_participant(event)
         elif "audio" in event:
             self.on_receive_audio(event)
-        elif "photo" in event:
+        elif "document" in event:
             self.on_receive_document(event)
         elif "photo" in event:
             self.on_receive_photo(event)

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 ################################################################################
 #                                                                              #
 #   main.py                                                                    #
@@ -26,9 +29,6 @@
 ################################################################################
 
 
-
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 from telegbot import telegbot
 from logger import logger
 logger = logger()
@@ -56,44 +56,44 @@ def new_chat_participant(msg):
 
 
 def left_chat_participant(msg):
-    pass
+    logger.msg(msg)
 
 def receive_audio(msg):
-    pass
+    logger.msg(msg)
 
 def receive_document(msg):
-    pass
+    logger.msg(msg)
 
 def receive_photo(msg):
-    pass
+    logger.msg(msg)
 
 def receive_sticker(msg):
-    pass
+    logger.msg(msg)
 
 def receive_video(msg):
-    pass
+    logger.msg(msg)
 
 def receive_contact(msg):
-    pass
+    logger.msg(msg)
 
 def receive_location(msg):
-    pass
+    logger.msg(msg)
 
 def new_chat_title(msg):
-    pass
+    logger.msg(msg)
 
 def new_chat_photo(msg):
-    pass
+    logger.msg(msg)
 
 def delete_chat_photo(msg):
-    pass
+    logger.msg(msg)
 
 def group_chat_created(msg):
-    pass
+    logger.msg(msg)
 
 
 
-bot = telegbot('TOKEN')
+bot = telegbot('92725317:AAHH8KRReReE_gKVzwHwrki7gvAXBGM__0Q')
 
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
