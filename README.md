@@ -4,7 +4,7 @@ Telegram Api for new bot system
 
 ## Getting started
 
-You should probably take a look at out [Getting Started](https://github.com/LibreLabUCM/teleg-api-bot/wiki/Getting-started-with-the-Telegram-Bot-API) wiki page.
+You should probably take a look at our [Getting Started](https://github.com/LibreLabUCM/teleg-api-bot/wiki/Getting-started-with-the-Telegram-Bot-API) wiki page.
 
 ## Usage
 
