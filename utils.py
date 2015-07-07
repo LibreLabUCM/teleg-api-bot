@@ -28,10 +28,6 @@
 #                                                                              #
 ################################################################################
 
-from inspect import getmembers
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
-
 
 def msgGetSummary(msg, truncate = 0):
     if 'text' in msg:
