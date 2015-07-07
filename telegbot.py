@@ -28,11 +28,9 @@
 #                                                                              #
 ################################################################################
 
-import urllib
-import urllib.request
+import requests
 import json
 import yaml
-import string
 
 class telegbot:
     def __init__(self, token):
@@ -56,60 +54,69 @@ class telegbot:
 
         self.quit = False
         print(self.data)
-    
+
     def void_callback(self, data={}):
         return
-    
-    def apiRequest(self, method, parameters = {}):
+
+    def apiRequest(self, method, parameters = {}, files=None):
         if not self.methodExists(method):
             return False
         url = self.config["telegramBotApi"]["api_url"]
         url = url.replace('{token}', self.getBotToken())
         url = url.replace('{method}', method)
-        values = self.manageParameters(method, parameters)
-        if values == None:
+        values = self.manageParameters(method, parameters, files)
+        if values is None:
             return False
-        data = urllib.parse.urlencode(values)
-        data = data.encode('utf-8') # data should be bytes
-        req = urllib.request.Request(url, data)
-        with urllib.request.urlopen(req) as response:
-            return json.loads(response.read().decode())
-        return False
-    
-    def manageParameters(self, method, parameters):
+
+        http_method = self.config["telegramBotApi"]["methods"][method]['action']
+        result = requests.request(http_method, url, params=parameters, files=files).json()
+        print(result)
+
+        if not result["ok"]:
+            return None
+        return result["result"]
+
+    def manageParameters(self, method, parameters, files):
         managedParams = {}
         if not self.methodExists(method):
-            return False
-        if self.config["telegramBotApi"]["methods"][method]["parameters"] == None:
+            return None
+        if self.config["telegramBotApi"]["methods"][method]["parameters"] is None:
             return managedParams
         for methodParameter in self.config["telegramBotApi"]["methods"][method]["parameters"]:
             methodParameterData = self.config["telegramBotApi"]["methods"][method]["parameters"][methodParameter]
             if methodParameter in parameters:
-                if (parameters[methodParameter] == None and not methodParameterData["required"]):
+                if (parameters[methodParameter] is None and not methodParameterData["required"]):
                     continue
                 if not (methodParameterData["type"] == type(parameters[methodParameter]).__name__):
-                    return False
+                    return None
                 managedParams[methodParameterData["parameter"]] = parameters[methodParameter]
+            #TODO: Find a better way to do this instead of having the code duplicated
+            elif methodParameter in files:
+                if (files[methodParameter] is None and not methodParameterData["required"]):
+                    continue
+                #if not (methodParameterData["type"] == type(files[methodParameter]).__name__):
+                #    return None
+                managedParams[methodParameterData["parameter"]] = files[methodParameter]
             else:
                 if methodParameter["required"]:
-                    return False
+                    return None
         return managedParams
-    
+
     def methodExists(self, method):
         return method in self.config["telegramBotApi"]["methods"]
-    
+
     def getBotToken(self):
         return self.token
-    
+
     def getBotUsername(self):
         return self.data["username"]
-    
+
     def getBotData(self):
         botData = self.apiRequest('getMe')
-        if not botData:
+        if botData is None:
             return False
-        return botData["result"]
-    
+        return botData
+
     def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
         response = self.apiRequest('sendMessage', {
             "chat_id": chat_id,
@@ -118,8 +125,25 @@ class telegbot:
             "reply_to_message_id": reply_to_message_id,
             "reply_markup": reply_markup
         })
-        if response["ok"]:
-            self.runEvent(response["result"])
+        self.runEvent(response)
+
+    def sendChatAction(self, chat_id, action):
+        response = self.apiRequest('sendChatAction', {
+            "chat_id": chat_id,
+            "action": action
+        })
+
+    def sendImage(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
+        response = self.apiRequest('sendPhoto', {
+            "chat_id": chat_id,
+            "caption": caption,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": reply_markup
+        }, files = {"photo": photo})
+        self.runEvent(response)
+
+
+
 
     def runEvent(self, event):
         if "text" in event:
@@ -152,7 +176,7 @@ class telegbot:
             self.on_group_chat_created(event)
         else:
             print(response)
-    
+
     def run(self):
         lastMessage_update_id = 0
         while (not self.quit):
@@ -161,9 +185,8 @@ class telegbot:
                 "limit": 100,
                 "timeout": 20
             })
-            if response["ok"]:
-                for update in response["result"]:
-                    if update["update_id"] > lastMessage_update_id:
-                        lastMessage_update_id = update["update_id"]
-                    self.runEvent(update["message"])
-    
+            for update in response:
+                if update["update_id"] > lastMessage_update_id:
+                    lastMessage_update_id = update["update_id"]
+                self.runEvent(update["message"])
+
