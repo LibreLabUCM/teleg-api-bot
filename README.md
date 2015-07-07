@@ -4,11 +4,13 @@ Telegram Api for new bot system
 
 ## Getting started
 
+This project uses Python 3, so you should probably install that, if you haven't already.
+
 You should probably take a look at our [Getting Started](https://github.com/LibreLabUCM/teleg-api-bot/wiki/Getting-started-with-the-Telegram-Bot-API) wiki page.
 
 ## Usage
 
-Dependencies: py-yaml
+Dependencies: Python 3.4, py-yaml
 
 "main.py" is the main file to run. It is an example of a bot.
 
