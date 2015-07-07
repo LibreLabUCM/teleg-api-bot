@@ -30,33 +30,35 @@
 
 
 def msgGetSummary(msg, truncate = 0):
+    summary = ""
+
     if 'text' in msg:
-        return (msg["text"][:truncate] + '...') if (len(msg["text"]) > truncate and truncate is not 0) else msg["text"]
-    elif 'new_chat_participant' in msg:
-        return msg["new_chat_participant"]["print_name"] + " was added to " + msg["chat"]["title"]
-    elif 'left_chat_participant' in msg:
-        return msg["left_chat_participant"]["print_name"] + " left " + msg["chat"]["title"]
-    elif 'audio' in msg:
-        return "Media: " + "Audio"
-    elif 'document' in msg:
-        return "Media: " + "Document"
-    elif 'photo' in msg:
-        return "Media: " + "Photo"
-    elif 'sticker' in msg:
-        return "Media: " + "Sticker"
-    elif 'video' in msg:
-        return "Media: " + "Video"
-    elif 'contact' in msg:
-        return "Media: " + "Contact"
-    elif 'location' in msg:
-        return "Media: " + "Location"
-    elif 'new_chat_title' in msg:
-        return "Chat title changed from " + msg["chat"]["title"] + " to " + msg["new_chat_title"]
-    elif 'new_chat_photo' in msg:
-        return "Chat photo changed"
-    elif 'delete_chat_photo' in msg:
-        return "Deleted chat photo"
-    elif 'group_chat_created' in msg:
-        return "Group chat " + msg["chat"]["title"] + " created"
-    else:
-        return ":O"
+        summary += "[Text: " + ( (msg["text"][:truncate] + '...') if (len(msg["text"]) > truncate and truncate is not 0) else msg["text"] ) + "] "
+    if 'new_chat_participant' in msg:
+        summary += msg["new_chat_participant"]["print_name"] + " was added to " + msg["chat"]["title"]  + " "
+    if 'left_chat_participant' in msg:
+        summary += msg["left_chat_participant"]["print_name"] + " left " + msg["chat"]["title"]  + " "
+    if 'audio' in msg:
+        summary += "[Media: " + "Audio"  + "] "
+    if 'document' in msg:
+        summary += "[Media: " + "Document"  + "] "
+    if 'photo' in msg:
+        summary += "[Media: " + "Photo"  + "] "
+    if 'sticker' in msg:
+        summary += "[Media: " + "Sticker"  + "] "
+    if 'video' in msg:
+        summary += "[Media: " + "Video"  + "] "
+    if 'contact' in msg:
+        summary += "[Media: " + "Contact" + "] "
+    if 'location' in msg:
+        summary += "[Media: " + "Location"  + "] "
+    if 'new_chat_title' in msg:
+        summary += "[Chat title changed from " + msg["chat"]["title"] + " to " + msg["new_chat_title"]  + "] "
+    if 'new_chat_photo' in msg:
+        summary += "[Chat photo changed"  + "] "
+    if 'delete_chat_photo' in msg:
+        summary += "[Deleted chat photo"  + "] "
+    if 'group_chat_created' in msg:
+        summary += "[Group chat " + msg["chat"]["title"] + " created"  + "] "
+    
+    return summary

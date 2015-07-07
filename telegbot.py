@@ -124,35 +124,33 @@ class telegbot:
     def runEvent(self, event):
         if "text" in event:
             self.on_receive_message(event)
-        elif "new_chat_participant" in event:
+        if "new_chat_participant" in event:
             self.on_new_chat_participant(event)
-        elif "left_chat_participant" in event:
+        if "left_chat_participant" in event:
             self.on_left_chat_participant(event)
-        elif "audio" in event:
+        if "audio" in event:
             self.on_receive_audio(event)
-        elif "document" in event:
+        if "document" in event:
             self.on_receive_document(event)
-        elif "photo" in event:
+        if "photo" in event:
             self.on_receive_photo(event)
-        elif "sticker" in event:
+        if "sticker" in event:
             self.on_receive_sticker(event)
-        elif "video" in event:
+        if "video" in event:
             self.on_receive_video(event)
-        elif "contact" in event:
+        if "contact" in event:
             self.on_receive_contact(event)
-        elif "location" in event:
+        if "location" in event:
             self.on_receive_location(event)
-        elif "new_chat_title" in event:
+        if "new_chat_title" in event:
             self.on_new_chat_title(event)
-        elif "new_chat_photo" in event:
+        if "new_chat_photo" in event:
             self.on_new_chat_photo(event)
-        elif "delete_chat_photo" in event:
+        if "delete_chat_photo" in event:
             self.on_delete_chat_photo(event)
-        elif "group_chat_created" in event:
+        if "group_chat_created" in event:
             self.on_group_chat_created(event)
-        else:
-            print(response)
-    
+            
     def run(self):
         lastMessage_update_id = 0
         while (not self.quit):
