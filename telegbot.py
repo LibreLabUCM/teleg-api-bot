@@ -29,8 +29,10 @@
 ################################################################################
 
 import requests
+from logger import logger
 import yaml
 
+logger = logger()
 
 LONG_POLLING_TIMEOUT=20
 REQUEST_TIMEOUT=40    # must be greater than LONG_POLLING_TIMEOUT
@@ -40,7 +42,9 @@ class telegbot:
         self.token = token
         self.config = yaml.load(open("config.yml", 'r'))
         self.data = self.getBotData()
+
         if self.data is None:
+            logger.log(logger.error, "Cannot get bot data, maybe a bad token")
             self.quit = True
             return      # Cannot get bot data, maybe a bad token
         self.on_receive_message = self.void_callback
@@ -74,9 +78,14 @@ class telegbot:
         url = url.replace('{method}', method)
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
-        result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=values, files=files)
         
-        print(result.url)
+        try:
+            result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=values, files=files)
+        except requests.exceptions.RequestException as e:
+            print("Exception in requests")
+
+        logger.log(logger.debug,result.url)
+        logger.log(logger.debug,result.text)
 
         if not (result.status_code is requests.codes.ok):
             return None   # Server reported error
@@ -91,6 +100,7 @@ class telegbot:
     def manageParameters(self, method, parameters, files):
         managedParams = {}
         if not self.methodExists(method):
+            logger.log(logger.debug, "call to non-existent method")
             return None   # non-existent method
         if self.config["telegramBotApi"]["methods"][method]["parameters"] is None:
             return managedParams
@@ -100,6 +110,7 @@ class telegbot:
                 if (parameters[methodParameter] is None and not methodParameterData["required"]):
                     continue
                 if not (methodParameterData["type"] == type(parameters[methodParameter]).__name__):
+                    logger.log(logger.debug, "Incorrect type in param")
                     return None   # incorrect type in param
                 managedParams[methodParameterData["parameter"]] = parameters[methodParameter]
             #TODO: Find a better way to do this instead of having the code duplicated
@@ -111,6 +122,7 @@ class telegbot:
                 managedParams[methodParameterData["parameter"]] = files[methodParameter]
             else:
                 if methodParameter["required"]:
+                    logger.log(logger.debug, "Non-existent required param")
                     return None   # non-existent required param
         return managedParams
 
@@ -126,7 +138,7 @@ class telegbot:
     def getBotData(self):
         botData = self.apiRequest('getMe')
         if botData is None:
-            return False
+            return None
         return botData
 
     def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
