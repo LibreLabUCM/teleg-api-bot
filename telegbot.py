@@ -29,14 +29,20 @@
 ################################################################################
 
 import requests
-import json
 import yaml
+
+
+LONG_POLLING_TIMEOUT=20
+REQUEST_TIMEOUT=40    # must be greater than LONG_POLLING_TIMEOUT
 
 class telegbot:
     def __init__(self, token):
         self.token = token
         self.config = yaml.load(open("config.yml", 'r'))
         self.data = self.getBotData()
+        if self.data is None:
+            self.quit = True
+            return      # Cannot get bot data, maybe a bad token
         self.on_receive_message = self.void_callback
         self.on_new_chat_participant = self.void_callback
         self.on_left_chat_participant = self.void_callback
@@ -59,27 +65,33 @@ class telegbot:
         return
 
     def apiRequest(self, method, parameters = {}, files=None):
-        if not self.methodExists(method):
-            return False
+        values = self.manageParameters(method, parameters, files)
+        if values is None:
+            return None   # Param error or non-existent method
+
         url = self.config["telegramBotApi"]["api_url"]
         url = url.replace('{token}', self.getBotToken())
         url = url.replace('{method}', method)
-        values = self.manageParameters(method, parameters, files)
-        if values is None:
-            return False
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
-        result = requests.request(http_method, url, params=parameters, files=files).json()
-        print(result)
+        result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=values, files=files)
+        
+        print(result.url)
+
+        if not (result.status_code is requests.codes.ok):
+            return None   # Server reported error
+        
+        result = result.json()
 
         if not result["ok"]:
-            return None
+            return None   # Telegram API reported error
+        
         return result["result"]
 
     def manageParameters(self, method, parameters, files):
         managedParams = {}
         if not self.methodExists(method):
-            return None
+            return None   # non-existent method
         if self.config["telegramBotApi"]["methods"][method]["parameters"] is None:
             return managedParams
         for methodParameter in self.config["telegramBotApi"]["methods"][method]["parameters"]:
@@ -88,7 +100,7 @@ class telegbot:
                 if (parameters[methodParameter] is None and not methodParameterData["required"]):
                     continue
                 if not (methodParameterData["type"] == type(parameters[methodParameter]).__name__):
-                    return None
+                    return None   # incorrect type in param
                 managedParams[methodParameterData["parameter"]] = parameters[methodParameter]
             #TODO: Find a better way to do this instead of having the code duplicated
             elif methodParameter in files:
@@ -99,7 +111,7 @@ class telegbot:
                 managedParams[methodParameterData["parameter"]] = files[methodParameter]
             else:
                 if methodParameter["required"]:
-                    return None
+                    return None   # non-existent required param
         return managedParams
 
     def methodExists(self, method):
@@ -181,7 +193,7 @@ class telegbot:
             response = self.apiRequest('getUpdates', {
                 "offset": lastMessage_update_id + 1,
                 "limit": 100,
-                "timeout": 20
+                "timeout": LONG_POLLING_TIMEOUT
             })
             for update in response:
                 if update["update_id"] > lastMessage_update_id:
