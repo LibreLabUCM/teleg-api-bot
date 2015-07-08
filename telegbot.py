@@ -29,6 +29,12 @@
 ################################################################################
 
 import requests
+from exceptions import ConexionFailedException as ConexionFailedException 
+from exceptions import BadServerResponseException as BadServerResponseException 
+from exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException 
+from exceptions import BadParamException as BadParamException 
+from exceptions import InvalidAPICallException as InvalidAPICallException 
+
 from logger import logger
 import yaml
 
@@ -41,12 +47,7 @@ class telegbot:
     def __init__(self, token):
         self.token = token
         self.config = yaml.load(open("config.yml", 'r'))
-        self.data = self.__getBotData()
 
-        if self.data is None:
-            logger.log(logger.error, "Cannot get bot data, maybe a bad token")
-            self.quit = True
-            return      # Cannot get bot data, maybe a bad token
         self.on_receive_message = self.__void_callback
         self.on_new_chat_participant = self.__void_callback
         self.on_left_chat_participant = self.__void_callback
@@ -61,9 +62,11 @@ class telegbot:
         self.on_new_chat_photo = self.__void_callback
         self.on_delete_chat_photo = self.__void_callback
         self.on_group_chat_created = self.__void_callback
+        self.quit = True
 
+    def connect(self):
+        self.data = self.__apiRequest('getMe')
         self.quit = False
-        print(self.data)
 
     def getBotToken(self):
         return self.token
@@ -115,8 +118,6 @@ class telegbot:
 
     def __apiRequest(self, method, parameters = {}, files=None):
         values = self.__manageParameters(method, parameters, files)
-        if values is None:
-            return None   # Param error or non-existent method
 
         url = self.config["telegramBotApi"]["api_url"]
         url = url.replace('{token}', self.getBotToken())
@@ -128,18 +129,18 @@ class telegbot:
             result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=values, files=files)
         except requests.exceptions.RequestException as e:
             logger.log(logger.error, "Exception in requests")
-            return None
+            raise ConexionFailedException(str(e))
 
         logger.log(logger.debug,result.url)
         logger.log(logger.debug,result.text)
 
         if not (result.status_code is requests.codes.ok):
-            return None   # Server reported error
+            raise BadServerResponseException("Bad HTTP status code", result.status_code)   # Server reported error
         
         result = result.json()
 
         if not result["ok"]:
-            return None   # Telegram API reported error
+            raise BadtelegAPIResponseException("Telegram API sent a non OK response")   # Telegram API reported error
         
         return result["result"]
 
@@ -147,9 +148,10 @@ class telegbot:
         managedParams = {}
         if not self.__methodExists(method):
             logger.log(logger.debug, "call to non-existent method")
-            return None   # non-existent method
+            raise InvalidAPICallException(method + "does not exists.")   # non-existent method
         if self.config["telegramBotApi"]["methods"][method]["parameters"] is None:
             return managedParams
+        
         for methodParameter in self.config["telegramBotApi"]["methods"][method]["parameters"]:
             methodParameterData = self.config["telegramBotApi"]["methods"][method]["parameters"][methodParameter]
             if methodParameter in parameters:
@@ -157,7 +159,7 @@ class telegbot:
                     continue
                 if not (methodParameterData["type"] == type(parameters[methodParameter]).__name__):
                     logger.log(logger.debug, "Incorrect type in param")
-                    return None   # incorrect type in param
+                    raise BadParamsException("Param " + methodParameter + " is of invalid value {" + type(parameters[methodParameter]).__name__ + "}")   # incorrect type in param
                 managedParams[methodParameterData["parameter"]] = parameters[methodParameter]
             #TODO: Find a better way to do this instead of having the code duplicated
             elif methodParameter in files:
@@ -168,18 +170,12 @@ class telegbot:
                 managedParams[methodParameterData["parameter"]] = files[methodParameter]
             else:
                 if methodParameter["required"]:
-                    logger.log(logger.debug, "Non-existent required param")
-                    return None   # non-existent required param
+                    logger.log(logger.debug, "Required param not specified")
+                    raise BadParamsException("Required param not specified {" + methodParameter + "}")    # non-existent required param
         return managedParams
 
     def __methodExists(self, method):
         return method in self.config["telegramBotApi"]["methods"]
-
-    def __getBotData(self):
-        botData = self.__apiRequest('getMe')
-        if botData is None:
-            return None
-        return botData
 
     def __runEvent(self, event):
         if "text" in event:

@@ -32,7 +32,7 @@
 from telegbot import telegbot
 from logger import logger
 logger = logger()
-import time,json
+import time, json
 import requests
 from lxml import html
 import os
@@ -151,7 +151,6 @@ def group_chat_created(msg):
 
 
 bot = telegbot('TOKEN')
-
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
 bot.on_left_chat_participant = left_chat_participant
@@ -166,5 +165,10 @@ bot.on_new_chat_title = new_chat_title
 bot.on_new_chat_photo = new_chat_photo
 bot.on_delete_chat_photo = delete_chat_photo
 bot.on_group_chat_created = group_chat_created
+
+try:
+    bot.connect()
+except Exception as e:
+    logger.log(logger.error, str(e))
 
 bot.run()
