@@ -117,8 +117,6 @@ class telegbot:
         return
 
     def __apiRequest(self, method, parameters = {}, files=None):
-        values = self.__manageParameters(method, parameters, files)
-
         url = self.config["telegramBotApi"]["api_url"]
         url = url.replace('{token}', self.getBotToken())
         url = url.replace('{method}', method)
@@ -126,7 +124,7 @@ class telegbot:
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
         
         try:
-            result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=values, files=files)
+            result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
         except requests.exceptions.RequestException as e:
             logger.log(logger.error, "Exception in requests")
             raise ConexionFailedException(str(e))
@@ -143,36 +141,6 @@ class telegbot:
             raise BadtelegAPIResponseException("Telegram API sent a non OK response")   # Telegram API reported error
         
         return result["result"]
-
-    def __manageParameters(self, method, parameters, files):
-        managedParams = {}
-        if not self.__methodExists(method):
-            logger.log(logger.debug, "call to non-existent method")
-            raise InvalidAPICallException(method + "does not exists.")   # non-existent method
-        if self.config["telegramBotApi"]["methods"][method]["parameters"] is None:
-            return managedParams
-        
-        for methodParameter in self.config["telegramBotApi"]["methods"][method]["parameters"]:
-            methodParameterData = self.config["telegramBotApi"]["methods"][method]["parameters"][methodParameter]
-            if methodParameter in parameters:
-                if (parameters[methodParameter] is None and not methodParameterData["required"]):
-                    continue
-                if not (methodParameterData["type"] == type(parameters[methodParameter]).__name__):
-                    logger.log(logger.debug, "Incorrect type in param")
-                    raise BadParamsException("Param " + methodParameter + " is of invalid value {" + type(parameters[methodParameter]).__name__ + "}")   # incorrect type in param
-                managedParams[methodParameterData["parameter"]] = parameters[methodParameter]
-            #TODO: Find a better way to do this instead of having the code duplicated
-            elif methodParameter in files:
-                if (files[methodParameter] is None and not methodParameterData["required"]):
-                    continue
-                #if not (methodParameterData["type"] == type(files[methodParameter]).__name__):
-                #    return None
-                #managedParams[methodParameterData["parameter"]] = files[methodParameter]
-            else:
-                if methodParameter["required"]:
-                    logger.log(logger.debug, "Required param not specified")
-                    raise BadParamsException("Required param not specified {" + methodParameter + "}")    # non-existent required param
-        return managedParams
 
     def __methodExists(self, method):
         return method in self.config["telegramBotApi"]["methods"]

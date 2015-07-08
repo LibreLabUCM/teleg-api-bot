@@ -47,11 +47,8 @@ def receive_message(msg):
         bot.sendMessage(msg["chat"]["id"], "Commands: (in custom keyboard)", reply_markup=json.dumps(options))
 
     elif msg["text"] == "/quit" or msg["text"] == "/quit@" + bot.getBotUsername():
-        if msg["from"]["id"] == 43804645 or msg["from"]["id"] == 61615919:
             bot.sendMessage(msg["chat"]["id"], "Bye!")
             bot.quit = True
-        else:
-            bot.sendMessage(msg["chat"]["id"], "You don't have permission!")
 
     elif msg["text"] == "/test keyboard":
         keyboard = {"keyboard":[["1⃣","2⃣","3⃣","4⃣","5⃣","6⃣","7⃣","8⃣","9⃣","0⃣", "XD"],["q","w","e","r","t","y","u","i","o","p"],["/help", "/quit", "/test keyboard"]]}
@@ -150,7 +147,7 @@ def group_chat_created(msg):
 
 
 
-bot = telegbot('92725317:AAHn9nfedwc0oYKTRC59bUJU8gyzF8n7N6w')
+bot = telegbot('TOKEN')
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
 bot.on_left_chat_participant = left_chat_participant
