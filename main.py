@@ -71,7 +71,7 @@ def receive_message(msg):
         # Not the best way to do this but...
         caption = imgClass.attrib['alt']
 
-        print(caption)
+        logger.log(logger.debug,caption)
         response = requests.get(imgURL)
         f = open("sample.gif", 'wb')
         f.write(response.content)
@@ -150,7 +150,7 @@ def group_chat_created(msg):
 
 
 
-bot = telegbot('TOKEN')
+bot = telegbot('92725317:AAHn9nfedwc0oYKTRC59bUJU8gyzF8n7N6w')
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
 bot.on_left_chat_participant = left_chat_participant

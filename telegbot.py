@@ -167,7 +167,7 @@ class telegbot:
                     continue
                 #if not (methodParameterData["type"] == type(files[methodParameter]).__name__):
                 #    return None
-                managedParams[methodParameterData["parameter"]] = files[methodParameter]
+                #managedParams[methodParameterData["parameter"]] = files[methodParameter]
             else:
                 if methodParameter["required"]:
                     logger.log(logger.debug, "Required param not specified")
