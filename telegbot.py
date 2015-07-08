@@ -41,35 +41,80 @@ class telegbot:
     def __init__(self, token):
         self.token = token
         self.config = yaml.load(open("config.yml", 'r'))
-        self.data = self.getBotData()
+        self.data = self.__getBotData()
 
         if self.data is None:
             logger.log(logger.error, "Cannot get bot data, maybe a bad token")
             self.quit = True
             return      # Cannot get bot data, maybe a bad token
-        self.on_receive_message = self.void_callback
-        self.on_new_chat_participant = self.void_callback
-        self.on_left_chat_participant = self.void_callback
-        self.on_receive_audio = self.void_callback
-        self.on_receive_document = self.void_callback
-        self.on_receive_photo = self.void_callback
-        self.on_receive_sticker = self.void_callback
-        self.on_receive_video = self.void_callback
-        self.on_receive_contact = self.void_callback
-        self.on_receive_location = self.void_callback
-        self.on_new_chat_title = self.void_callback
-        self.on_new_chat_photo = self.void_callback
-        self.on_delete_chat_photo = self.void_callback
-        self.on_group_chat_created = self.void_callback
+        self.on_receive_message = self.__void_callback
+        self.on_new_chat_participant = self.__void_callback
+        self.on_left_chat_participant = self.__void_callback
+        self.on_receive_audio = self.__void_callback
+        self.on_receive_document = self.__void_callback
+        self.on_receive_photo = self.__void_callback
+        self.on_receive_sticker = self.__void_callback
+        self.on_receive_video = self.__void_callback
+        self.on_receive_contact = self.__void_callback
+        self.on_receive_location = self.__void_callback
+        self.on_new_chat_title = self.__void_callback
+        self.on_new_chat_photo = self.__void_callback
+        self.on_delete_chat_photo = self.__void_callback
+        self.on_group_chat_created = self.__void_callback
 
         self.quit = False
         print(self.data)
 
-    def void_callback(self, data={}):
+    def getBotToken(self):
+        return self.token
+
+    def getBotUsername(self):
+        return self.data["username"]
+
+    def run(self):
+        lastMessage_update_id = 0
+        while (not self.quit):
+            response = self.__apiRequest('getUpdates', {
+                "offset": lastMessage_update_id + 1,
+                "limit": 100,
+                "timeout": LONG_POLLING_TIMEOUT
+            })
+            for update in response:
+                if update["update_id"] > lastMessage_update_id:
+                    lastMessage_update_id = update["update_id"]
+                self.__runEvent(update["message"])
+
+    def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
+        response = self.__apiRequest('sendMessage', {
+            "chat_id": chat_id,
+            "text": text,
+            "disable_web_page_preview": disable_web_page_preview,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": reply_markup
+        })
+        self.__runEvent(response)
+
+    def sendChatAction(self, chat_id, action):
+        response = self.__apiRequest('sendChatAction', {
+            "chat_id": chat_id,
+            "action": action
+        })
+
+    def sendImage(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
+        response = self.__apiRequest('sendPhoto', {
+            "chat_id": chat_id,
+            "caption": caption,
+            "reply_to_message_id": reply_to_message_id,
+            "reply_markup": reply_markup
+        }, files = {"photo": photo})
+        self.__runEvent(response)
+
+
+    def __void_callback(self, data={}):
         return
 
-    def apiRequest(self, method, parameters = {}, files=None):
-        values = self.manageParameters(method, parameters, files)
+    def __apiRequest(self, method, parameters = {}, files=None):
+        values = self.__manageParameters(method, parameters, files)
         if values is None:
             return None   # Param error or non-existent method
 
@@ -82,7 +127,8 @@ class telegbot:
         try:
             result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=values, files=files)
         except requests.exceptions.RequestException as e:
-            print("Exception in requests")
+            logger.log(logger.error, "Exception in requests")
+            return None
 
         logger.log(logger.debug,result.url)
         logger.log(logger.debug,result.text)
@@ -97,9 +143,9 @@ class telegbot:
         
         return result["result"]
 
-    def manageParameters(self, method, parameters, files):
+    def __manageParameters(self, method, parameters, files):
         managedParams = {}
-        if not self.methodExists(method):
+        if not self.__methodExists(method):
             logger.log(logger.debug, "call to non-existent method")
             return None   # non-existent method
         if self.config["telegramBotApi"]["methods"][method]["parameters"] is None:
@@ -126,50 +172,16 @@ class telegbot:
                     return None   # non-existent required param
         return managedParams
 
-    def methodExists(self, method):
+    def __methodExists(self, method):
         return method in self.config["telegramBotApi"]["methods"]
 
-    def getBotToken(self):
-        return self.token
-
-    def getBotUsername(self):
-        return self.data["username"]
-
-    def getBotData(self):
-        botData = self.apiRequest('getMe')
+    def __getBotData(self):
+        botData = self.__apiRequest('getMe')
         if botData is None:
             return None
         return botData
 
-    def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
-        response = self.apiRequest('sendMessage', {
-            "chat_id": chat_id,
-            "text": text,
-            "disable_web_page_preview": disable_web_page_preview,
-            "reply_to_message_id": reply_to_message_id,
-            "reply_markup": reply_markup
-        })
-        self.runEvent(response)
-
-    def sendChatAction(self, chat_id, action):
-        response = self.apiRequest('sendChatAction', {
-            "chat_id": chat_id,
-            "action": action
-        })
-
-    def sendImage(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
-        response = self.apiRequest('sendPhoto', {
-            "chat_id": chat_id,
-            "caption": caption,
-            "reply_to_message_id": reply_to_message_id,
-            "reply_markup": reply_markup
-        }, files = {"photo": photo})
-        self.runEvent(response)
-
-
-
-
-    def runEvent(self, event):
+    def __runEvent(self, event):
         if "text" in event:
             self.on_receive_message(event)
         if "new_chat_participant" in event:
@@ -198,17 +210,4 @@ class telegbot:
             self.on_delete_chat_photo(event)
         if "group_chat_created" in event:
             self.on_group_chat_created(event)
-
-    def run(self):
-        lastMessage_update_id = 0
-        while (not self.quit):
-            response = self.apiRequest('getUpdates', {
-                "offset": lastMessage_update_id + 1,
-                "limit": 100,
-                "timeout": LONG_POLLING_TIMEOUT
-            })
-            for update in response:
-                if update["update_id"] > lastMessage_update_id:
-                    lastMessage_update_id = update["update_id"]
-                self.runEvent(update["message"])
 
