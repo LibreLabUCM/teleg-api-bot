@@ -1,4 +1,6 @@
 include LICENSE.txt
+include README.md
+
 
 # configuration file
 include telegapi/config.yml
