@@ -29,14 +29,16 @@
 ################################################################################
 
 import requests
-from exceptions import ConexionFailedException as ConexionFailedException 
-from exceptions import BadServerResponseException as BadServerResponseException 
-from exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException 
-from exceptions import BadParamException as BadParamException 
-from exceptions import InvalidAPICallException as InvalidAPICallException 
-
-from logger import logger
 import yaml
+from pkg_resources import resource_stream
+
+from telegapi.exceptions import ConexionFailedException as ConexionFailedException 
+from telegapi.exceptions import BadServerResponseException as BadServerResponseException 
+from telegapi.exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException 
+from telegapi.exceptions import BadParamException as BadParamException 
+from telegapi.exceptions import InvalidAPICallException as InvalidAPICallException 
+
+from telegapi.logger import logger
 
 logger = logger()
 
@@ -46,7 +48,7 @@ REQUEST_TIMEOUT=40    # must be greater than LONG_POLLING_TIMEOUT
 class telegbot:
     def __init__(self, token):
         self.token = token
-        self.config = yaml.load(open("config.yml", 'r'))
+        self.config = yaml.load(resource_stream(__name__, "config.yml"))
 
         self.on_receive_message = self.__void_callback
         self.on_new_chat_participant = self.__void_callback

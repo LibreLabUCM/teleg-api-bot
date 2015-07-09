@@ -29,9 +29,10 @@
 ################################################################################
 
 
-from TC import TC as TC # And TC again
+from telegapi.TC import TC as TC
+from telegapi import utils
+
 from time import gmtime, strftime
-import utils
 import json
 
 class logger:

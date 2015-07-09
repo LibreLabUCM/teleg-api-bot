@@ -29,8 +29,9 @@
 ################################################################################
 
 
-from telegbot import telegbot
-from logger import logger
+from telegapi.telegbot import telegbot
+from telegapi.logger import logger
+
 logger = logger()
 import time, json
 import requests

@@ -1,6 +1,9 @@
 
 # Ignore python compiled files
 
+build/
+dist/
+/**/*.egg-info/
 /**/*.pyc
 
 
