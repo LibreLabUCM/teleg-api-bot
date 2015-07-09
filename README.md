@@ -18,7 +18,7 @@ Example bot:
 
 ```python
 
-#!/usr/bin/python
+#!/usr/bin/env python3
 from telegbot import telegbot
 from logger import logger
 logger = logger()
