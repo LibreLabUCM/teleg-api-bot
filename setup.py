@@ -4,7 +4,7 @@ setup(
     name = 'teleg-api-bot',
     packages = ['telegapi'],
     data_files = [('telegapi',['telegapi/config.yml'])],
-    version = '0.0.1',
+    version = '0.0.11',
     description = 'Wrapper to Telegram bots API',
     author = 'LibreLabUCM',
     author_email = 'librelabucm@googlegroups.com',
