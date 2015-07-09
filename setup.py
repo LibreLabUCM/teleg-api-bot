@@ -14,14 +14,13 @@ setup(
         'pyyaml'
     ],
     classifiers=[
-        'Programming Languaje :: Python',
-        'Programming Languaje :: Python :: 3',
-        'License :: GNU General Public License (GPL)',
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
-        'Development Status :: in-development',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
-        'Intended Audience :: Bot programmers',
-        'Topic :: Fun'
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ]
 
 )
