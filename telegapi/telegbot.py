@@ -119,9 +119,7 @@ class telegbot:
         return
 
     def __apiRequest(self, method, parameters = {}, files=None):
-        url = self.config["telegramBotApi"]["api_url"]
-        url = url.replace('{token}', self.getBotToken())
-        url = url.replace('{method}', method)
+        url = self.config["telegramBotApi"]["api_url"].format(token=self.getBotToken(), method=method)
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
         
