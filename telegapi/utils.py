@@ -60,5 +60,5 @@ def msgGetSummary(msg, truncate = 0):
         summary += "[Deleted chat photo"  + "] "
     if 'group_chat_created' in msg:
         summary += "[Group chat " + msg["chat"]["title"] + " created"  + "] "
-    
+
     return summary

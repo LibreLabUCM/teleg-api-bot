@@ -107,7 +107,7 @@ def receive_message(msg):
         os.remove('sample.gif')
 
 def new_chat_participant(msg):
-    print("Welcome @" + msg["new_chat_participant"]["username"] + " to " + msg["chat"]["title"])
+    print("Welcome @" + msg["new_chat_participant"]["first_name"] + " to " + msg["chat"]["title"])
 
 
 def left_chat_participant(msg):

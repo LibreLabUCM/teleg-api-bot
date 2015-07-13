@@ -32,11 +32,11 @@ import requests
 import yaml
 from pkg_resources import resource_stream
 
-from telegapi.exceptions import ConexionFailedException as ConexionFailedException 
-from telegapi.exceptions import BadServerResponseException as BadServerResponseException 
-from telegapi.exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException 
-from telegapi.exceptions import BadParamException as BadParamException 
-from telegapi.exceptions import InvalidAPICallException as InvalidAPICallException 
+from telegapi.exceptions import ConexionFailedException as ConexionFailedException
+from telegapi.exceptions import BadServerResponseException as BadServerResponseException
+from telegapi.exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException
+from telegapi.exceptions import BadParamException as BadParamException
+from telegapi.exceptions import InvalidAPICallException as InvalidAPICallException
 
 from telegapi.logger import logger
 
@@ -122,7 +122,7 @@ class telegbot:
         url = self.config["telegramBotApi"]["api_url"].format(token=self.getBotToken(), method=method)
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
-        
+
         try:
             result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
         except requests.exceptions.RequestException as e:
@@ -134,12 +134,12 @@ class telegbot:
 
         if not (result.status_code is requests.codes.ok):
             raise BadServerResponseException("Bad HTTP status code", result.status_code)   # Server reported error
-        
+
         result = result.json()
 
         if not result["ok"]:
             raise BadtelegAPIResponseException("Telegram API sent a non OK response")   # Telegram API reported error
-        
+
         return result["result"]
 
     def __methodExists(self, method):
