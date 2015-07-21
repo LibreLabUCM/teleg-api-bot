@@ -32,7 +32,7 @@ import requests
 import yaml
 from pkg_resources import resource_stream
 
-from telegapi.exceptions import ConexionFailedException as ConexionFailedException
+from telegapi.exceptions import ConnectionFailedException as ConnectionFailedException
 from telegapi.exceptions import BadServerResponseException as BadServerResponseException
 from telegapi.exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException
 from telegapi.exceptions import BadParamException as BadParamException
@@ -127,7 +127,7 @@ class telegbot:
             result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
         except requests.exceptions.RequestException as e:
             logger.log(logger.error, "Exception in requests")
-            raise ConexionFailedException(str(e))
+            raise ConnectionFailedException(str(e))
 
         logger.log(logger.debug, result.url)
         logger.log(logger.debug, result.text)

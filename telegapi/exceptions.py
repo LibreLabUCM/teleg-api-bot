@@ -29,7 +29,7 @@
 ################################################################################
 
 
-class ConexionFailedException(Exception):
+class ConnectionFailedException(Exception):
     def __init__(self, text):
         self.description = text
 
