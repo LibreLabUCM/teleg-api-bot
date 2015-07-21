@@ -29,7 +29,7 @@
 ################################################################################
 
 
-from telegapi.telegbot import telegbot
+from telegapi.telegbot import TelegBot
 from telegapi.logger import Logger
 
 logger = Logger()
@@ -163,7 +163,7 @@ def group_chat_created(msg):
     logger.msg(msg)
 
 
-bot = telegbot('TOKEN')
+bot = TelegBot('TOKEN')
 bot.on_receive_message = receive_message
 bot.on_new_chat_participant = new_chat_participant
 bot.on_left_chat_participant = left_chat_participant

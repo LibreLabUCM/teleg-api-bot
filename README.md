@@ -19,7 +19,7 @@ Example bot:
 ```python
 
 #!/usr/bin/env python3
-from telegbot import telegbot
+from telegbot import TelegBot
 from logger import Logger
 logger = Logger()
 import time,json
@@ -32,7 +32,7 @@ def receive_message(msg):
         bot.send_message(msg["chat"]["id"], "Text")
 
 
-bot = telegbot('TOKEN')
+bot = TelegBot('TOKEN')
 bot.on_receive_message = receive_message
 bot.run()
 

@@ -46,7 +46,7 @@ LONG_POLLING_TIMEOUT = 20
 REQUEST_TIMEOUT = 40  # must be greater than LONG_POLLING_TIMEOUT
 
 
-class telegbot:
+class TelegBot:
     def __init__(self, token):
         self.token = token
         self.config = yaml.load(resource_stream(__name__, "config.yml"))
