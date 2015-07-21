@@ -35,9 +35,6 @@ from pkg_resources import resource_stream
 from telegapi.exceptions import ConnectionFailedException as ConnectionFailedException
 from telegapi.exceptions import BadServerResponseException as BadServerResponseException
 from telegapi.exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException
-from telegapi.exceptions import BadParamException as BadParamException
-from telegapi.exceptions import InvalidAPICallException as InvalidAPICallException
-
 from telegapi.logger import Logger
 
 logger = Logger()
