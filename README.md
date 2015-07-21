@@ -20,8 +20,8 @@ Example bot:
 
 #!/usr/bin/env python3
 from telegbot import telegbot
-from logger import logger
-logger = logger()
+from logger import Logger
+logger = Logger()
 import time,json
 
 def receive_message(msg):

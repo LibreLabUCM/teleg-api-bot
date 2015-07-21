@@ -30,14 +30,15 @@
 
 
 from telegapi.telegbot import telegbot
-from telegapi.logger import logger
+from telegapi.logger import Logger
 
-logger = logger()
+logger = Logger()
 import time, json
 import requests
 from lxml import html
 import os
 import random
+
 
 def receive_message(msg):
     if msg["date"] < time.time() - 2:

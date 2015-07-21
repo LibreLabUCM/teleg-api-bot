@@ -36,7 +36,7 @@ from time import gmtime, strftime
 import json
 
 
-class logger:
+class Logger:
     info = {'logLevel': 1, 'colorCode': TC.ICyan, 'prefix': " INFO "}
     out = {'logLevel': 2, 'colorCode': TC.IWhite, 'prefix': ""}
     debug = {'logLevel': 3, 'colorCode': TC.IBlue, 'prefix': " DEBUG"}
@@ -45,7 +45,7 @@ class logger:
 
     def log(self, log_type, text):
         if log_type["logLevel"] < self.info["logLevel"] or log_type["logLevel"] > self.error["logLevel"]:
-            self.log(self.error, "First parameter of \"logger.log\" is incorrect!")
+            self.log(self.error, "First parameter of \"Logger.log\" is incorrect!")
             return False
         text = text.replace(TC.Rst, TC.Rst + TC.IWhite)
         prefix = ""
