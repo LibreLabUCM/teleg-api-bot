@@ -33,33 +33,47 @@ def msg_get_summary(msg, truncate=0):
     summary = ""
 
     if 'text' in msg:
-        summary += "[Text: " + (
-            (msg["text"][:truncate] + '...') if (len(msg["text"]) > truncate and truncate is not 0) else msg[
-                "text"]) + "] "
+        summary += "[Text: " +\
+                   ((msg["text"][:truncate] + '...')
+                    if (len(msg["text"]) > truncate and truncate is not 0)
+                    else msg["text"]) + "] "
+
     if 'new_chat_participant' in msg:
         summary += msg["new_chat_participant"]["first_name"] + " was added to " + msg["chat"]["title"] + " "
+
     if 'left_chat_participant' in msg:
         summary += msg["left_chat_participant"]["first_name"] + " left " + msg["chat"]["title"] + " "
+
     if 'audio' in msg:
         summary += "[Media: " + "Audio" + "] "
+
     if 'document' in msg:
         summary += "[Media: " + "Document" + "] "
+
     if 'photo' in msg:
         summary += "[Media: " + "Photo" + "] "
+
     if 'sticker' in msg:
         summary += "[Media: " + "Sticker" + "] "
+
     if 'video' in msg:
         summary += "[Media: " + "Video" + "] "
+
     if 'contact' in msg:
         summary += "[Media: " + "Contact" + "] "
+
     if 'location' in msg:
         summary += "[Media: " + "Location" + "] "
+
     if 'new_chat_title' in msg:
         summary += "[Chat title changed from " + msg["chat"]["title"] + " to " + msg["new_chat_title"] + "] "
+
     if 'new_chat_photo' in msg:
         summary += "[Chat photo changed" + "] "
+
     if 'delete_chat_photo' in msg:
         summary += "[Deleted chat photo" + "] "
+
     if 'group_chat_created' in msg:
         summary += "[Group chat " + msg["chat"]["title"] + " created" + "] "
 
