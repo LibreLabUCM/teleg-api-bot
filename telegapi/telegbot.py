@@ -125,7 +125,7 @@ class TelegBot:
 
         try:
             result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
-        except requests.exceptions.RequestException as e:
+        except requests.RequestException as e:
             logger.log(logger.error, "Exception in requests")
             raise ConnectionFailedException(str(e))
 
@@ -138,7 +138,7 @@ class TelegBot:
         result = result.json()
 
         if not result["ok"]:
-            raise BadtelegAPIResponseException("Telegram API sent a non OK response")  # Telegram API reported error
+            raise BadTelegAPIResponseException("Telegram API sent a non OK response")  # Telegram API reported error
 
         return result["result"]
 
