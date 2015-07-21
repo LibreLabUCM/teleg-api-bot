@@ -29,7 +29,7 @@
 ################################################################################
 
 
-def msgGetSummary(msg, truncate=0):
+def msg_get_summary(msg, truncate=0):
     summary = ""
 
     if 'text' in msg:

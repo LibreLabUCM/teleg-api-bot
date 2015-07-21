@@ -78,11 +78,11 @@ class logger:
             output = output + TC.IPurple + "[fwd " + TC.ICyan + msg["fwd_src"]["username"] + TC.IPurple + "]" + TC.Rst
         if "reply" in msg:
             output = output + TC.IPurple + "[reply " + TC.ICyan + str(
-                msg["reply"]["from"]["username"]) + TC.Rst + ": " + TC.Yellow + utils.msgGetSummary(msg["reply"],
+                msg["reply"]["from"]["username"]) + TC.Rst + ": " + TC.Yellow + utils.msg_get_summary(msg["reply"],
                                                                                                     10) + TC.IPurple + "]" + TC.Rst
         if "reply_id" in msg:
             output = output + TC.IPurple + "[reply " + TC.ICyan + str(msg["reply_id"]) + TC.IPurple + "]" + TC.Rst
-        output = output + TC.IYellow + utils.msgGetSummary(msg, 0) + TC.Rst
+        output = output + TC.IYellow + utils.msg_get_summary(msg, 0) + TC.Rst
         output = output.replace('\n', ' ').replace('\r', '')
         self.log(self.info, output)
         return

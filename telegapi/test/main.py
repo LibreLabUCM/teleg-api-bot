@@ -78,8 +78,8 @@ def receive_message(msg):
         f.write(response.content)
         f.close()
         img = open('sample.gif', 'rb')
-        bot.sendChatAction(msg["chat"]["id"], 'upload_photo')
-        bot.sendImage(msg["chat"]["id"], img, caption=caption)
+        bot.send_chat_action(msg["chat"]["id"], 'upload_photo')
+        bot.send_image(msg["chat"]["id"], img, caption=caption)
         img.close()
         os.remove('sample.gif')
 
@@ -104,8 +104,8 @@ def receive_message(msg):
         f.write(response.content)
         f.close()
         img = open('sample.gif', 'rb')
-        bot.sendChatAction(msg["chat"]["id"], 'upload_photo')
-        bot.sendImage(msg["chat"]["id"], img, caption=caption)
+        bot.send_chat_action(msg["chat"]["id"], 'upload_photo')
+        bot.send_image(msg["chat"]["id"], img, caption=caption)
         img.close()
         os.remove('sample.gif')
 

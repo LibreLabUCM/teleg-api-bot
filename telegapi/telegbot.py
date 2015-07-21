@@ -68,19 +68,19 @@ class telegbot:
         self.quit = True
 
     def connect(self):
-        self.data = self.__apiRequest('getMe')
+        self.data = self.__api_request('getMe')
         self.quit = False
 
-    def getBotToken(self):
+    def get_bot_token(self):
         return self.token
 
-    def getBotUsername(self):
+    def get_bot_username(self):
         return self.data["username"]
 
     def run(self):
         last_message_update_id = 0
         while not self.quit:
-            response = self.__apiRequest('getUpdates', {
+            response = self.__api_request('getUpdates', {
                 "offset": last_message_update_id + 1,
                 "limit": 100,
                 "timeout": LONG_POLLING_TIMEOUT
@@ -88,38 +88,38 @@ class telegbot:
             for update in response:
                 if update["update_id"] > last_message_update_id:
                     last_message_update_id = update["update_id"]
-                self.__runEvent(update["message"])
+                self.__run_event(update["message"])
 
-    def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
-        response = self.__apiRequest('sendMessage', {
+    def send_message(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
+        response = self.__api_request('send_message', {
             "chat_id": chat_id,
             "text": text,
             "disable_web_page_preview": disable_web_page_preview,
             "reply_to_message_id": reply_to_message_id,
             "reply_markup": reply_markup
         })
-        self.__runEvent(response)
+        self.__run_event(response)
 
-    def sendChatAction(self, chat_id, action):
-        response = self.__apiRequest('sendChatAction', {
+    def sen_chat_action(self, chat_id, action):
+        response = self.__api_request('send_chat_action', {
             "chat_id": chat_id,
             "action": action
         })
 
-    def sendImage(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
-        response = self.__apiRequest('sendPhoto', {
+    def send_image(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
+        response = self.__api_request('sendPhoto', {
             "chat_id": chat_id,
             "caption": caption,
             "reply_to_message_id": reply_to_message_id,
             "reply_markup": reply_markup
         }, files={"photo": photo})
-        self.__runEvent(response)
+        self.__run_event(response)
 
     def __void_callback(self, data={}):
         return
 
-    def __apiRequest(self, method, parameters={}, files=None):
-        url = self.config["telegramBotApi"]["api_url"].format(token=self.getBotToken(), method=method)
+    def __api_request(self, method, parameters={}, files=None):
+        url = self.config["telegramBotApi"]["api_url"].format(token=self.get_bot_token(), method=method)
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
 
@@ -142,10 +142,10 @@ class telegbot:
 
         return result["result"]
 
-    def __methodExists(self, method):
+    def __method_exists(self, method):
         return method in self.config["telegramBotApi"]["methods"]
 
-    def __runEvent(self, event):
+    def __run_event(self, event):
         if "text" in event:
             self.on_receive_message(event)
         if "new_chat_participant" in event:

@@ -29,7 +29,7 @@ def receive_message(msg):
         return # old
     logger.msg(msg)
     if msg["text"] == "/help":
-        bot.sendMessage(msg["chat"]["id"], "Text")
+        bot.send_message(msg["chat"]["id"], "Text")
 
 
 bot = telegbot('TOKEN')
