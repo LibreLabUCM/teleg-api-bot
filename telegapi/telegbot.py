@@ -100,7 +100,7 @@ class telegbot:
         })
         self.__run_event(response)
 
-    def sen_chat_action(self, chat_id, action):
+    def send_chat_action(self, chat_id, action):
         response = self.__api_request('send_chat_action', {
             "chat_id": chat_id,
             "action": action
