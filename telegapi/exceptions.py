@@ -35,9 +35,9 @@ class ConexionFailedException(Exception):
 
 
 class BadServerResponseException(Exception):
-    def __init__(self, text, errorcode):
+    def __init__(self, text, error_code):
         self.description = text
-        self.code = errorcode
+        self.code = error_code
 
 
 class BadTelegAPIResponseException(Exception):

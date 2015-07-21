@@ -43,19 +43,19 @@ class logger:
     warn = {'logLevel': 4, 'colorCode': TC.IYellow, 'prefix': " WARN "}
     error = {'logLevel': 5, 'colorCode': TC.Red, 'prefix': " ERROR"}
 
-    def log(self, logType, text):
-        if logType["logLevel"] < self.info["logLevel"] or logType["logLevel"] > self.error["logLevel"]:
+    def log(self, log_type, text):
+        if log_type["logLevel"] < self.info["logLevel"] or log_type["logLevel"] > self.error["logLevel"]:
             self.log(self.error, "First parameter of \"logger.log\" is incorrect!")
             return False
         text = text.replace(TC.Rst, TC.Rst + TC.IWhite)
         prefix = ""
-        if logType["prefix"] != "":
-            prefix = TC.IWhite + "[" + logType["colorCode"] + logType["prefix"] + TC.IWhite + "] "
-        currentTime = "[" + strftime("%H:%M", gmtime()) + "]"
-        printText = TC.IWhite + currentTime + prefix + text + TC.Rst
-        plainText = currentTime + "[" + logType["prefix"] + "] " + text
-        print(printText)
-        # print(plainText)
+        if log_type["prefix"] != "":
+            prefix = TC.IWhite + "[" + log_type["colorCode"] + log_type["prefix"] + TC.IWhite + "] "
+        current_time = "[" + strftime("%H:%M", gmtime()) + "]"
+        print_text = TC.IWhite + current_time + prefix + text + TC.Rst
+        plain_text = current_time + "[" + log_type["prefix"] + "] " + text
+        print(print_text)
+        # print(plain_text)
         return
 
     def msg(self, msg):

@@ -78,16 +78,16 @@ class telegbot:
         return self.data["username"]
 
     def run(self):
-        lastMessage_update_id = 0
-        while (not self.quit):
+        last_message_update_id = 0
+        while not self.quit:
             response = self.__apiRequest('getUpdates', {
-                "offset": lastMessage_update_id + 1,
+                "offset": last_message_update_id + 1,
                 "limit": 100,
                 "timeout": LONG_POLLING_TIMEOUT
             })
             for update in response:
-                if update["update_id"] > lastMessage_update_id:
-                    lastMessage_update_id = update["update_id"]
+                if update["update_id"] > last_message_update_id:
+                    last_message_update_id = update["update_id"]
                 self.__runEvent(update["message"])
 
     def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):

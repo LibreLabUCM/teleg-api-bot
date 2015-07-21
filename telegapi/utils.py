@@ -34,7 +34,8 @@ def msgGetSummary(msg, truncate=0):
 
     if 'text' in msg:
         summary += "[Text: " + (
-        (msg["text"][:truncate] + '...') if (len(msg["text"]) > truncate and truncate is not 0) else msg["text"]) + "] "
+            (msg["text"][:truncate] + '...') if (len(msg["text"]) > truncate and truncate is not 0) else msg[
+                "text"]) + "] "
     if 'new_chat_participant' in msg:
         summary += msg["new_chat_participant"]["first_name"] + " was added to " + msg["chat"]["title"] + " "
     if 'left_chat_participant' in msg:
