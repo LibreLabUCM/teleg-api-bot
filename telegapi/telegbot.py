@@ -32,20 +32,18 @@ import requests
 import yaml
 from pkg_resources import resource_stream
 
-from telegapi.exceptions import ConexionFailedException as ConexionFailedException
+from telegapi.exceptions import ConnectionFailedException as ConnectionFailedException
 from telegapi.exceptions import BadServerResponseException as BadServerResponseException
 from telegapi.exceptions import BadTelegAPIResponseException as BadTelegAPIResponseException
-from telegapi.exceptions import BadParamException as BadParamException
-from telegapi.exceptions import InvalidAPICallException as InvalidAPICallException
+from telegapi.logger import Logger
 
-from telegapi.logger import logger
+logger = Logger()
 
-logger = logger()
+LONG_POLLING_TIMEOUT = 20
+REQUEST_TIMEOUT = 40  # must be greater than LONG_POLLING_TIMEOUT
 
-LONG_POLLING_TIMEOUT=20
-REQUEST_TIMEOUT=40    # must be greater than LONG_POLLING_TIMEOUT
 
-class telegbot:
+class TelegBot:
     def __init__(self, token):
         self.token = token
         self.config = yaml.load(resource_stream(__name__, "config.yml"))
@@ -67,85 +65,84 @@ class telegbot:
         self.quit = True
 
     def connect(self):
-        self.data = self.__apiRequest('getMe')
+        self.data = self.__api_request('getMe')
         self.quit = False
 
-    def getBotToken(self):
+    def get_bot_token(self):
         return self.token
 
-    def getBotUsername(self):
+    def get_bot_username(self):
         return self.data["username"]
 
     def run(self):
-        lastMessage_update_id = 0
-        while (not self.quit):
-            response = self.__apiRequest('getUpdates', {
-                "offset": lastMessage_update_id + 1,
+        last_message_update_id = 0
+        while not self.quit:
+            response = self.__api_request('getUpdates', {
+                "offset": last_message_update_id + 1,
                 "limit": 100,
                 "timeout": LONG_POLLING_TIMEOUT
             })
             for update in response:
-                if update["update_id"] > lastMessage_update_id:
-                    lastMessage_update_id = update["update_id"]
-                self.__runEvent(update["message"])
+                if update["update_id"] > last_message_update_id:
+                    last_message_update_id = update["update_id"]
+                self.__run_event(update["message"])
 
-    def sendMessage(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
-        response = self.__apiRequest('sendMessage', {
+    def send_message(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
+        response = self.__api_request('send_message', {
             "chat_id": chat_id,
             "text": text,
             "disable_web_page_preview": disable_web_page_preview,
             "reply_to_message_id": reply_to_message_id,
             "reply_markup": reply_markup
         })
-        self.__runEvent(response)
+        self.__run_event(response)
 
-    def sendChatAction(self, chat_id, action):
-        response = self.__apiRequest('sendChatAction', {
+    def send_chat_action(self, chat_id, action):
+        response = self.__api_request('send_chat_action', {
             "chat_id": chat_id,
             "action": action
         })
 
-    def sendImage(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
-        response = self.__apiRequest('sendPhoto', {
+    def send_image(self, chat_id, photo, caption=None, reply_to_message_id=None, reply_markup=None):
+        response = self.__api_request('sendPhoto', {
             "chat_id": chat_id,
             "caption": caption,
             "reply_to_message_id": reply_to_message_id,
             "reply_markup": reply_markup
-        }, files = {"photo": photo})
-        self.__runEvent(response)
-
+        }, files={"photo": photo})
+        self.__run_event(response)
 
     def __void_callback(self, data={}):
         return
 
-    def __apiRequest(self, method, parameters = {}, files=None):
-        url = self.config["telegramBotApi"]["api_url"].format(token=self.getBotToken(), method=method)
+    def __api_request(self, method, parameters={}, files=None):
+        url = self.config["telegramBotApi"]["api_url"].format(token=self.get_bot_token(), method=method)
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
 
         try:
             result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
-        except requests.exceptions.RequestException as e:
+        except requests.RequestException as e:
             logger.log(logger.error, "Exception in requests")
-            raise ConexionFailedException(str(e))
+            raise ConnectionFailedException(str(e))
 
-        logger.log(logger.debug,result.url)
-        logger.log(logger.debug,result.text)
+        logger.log(logger.debug, result.url)
+        logger.log(logger.debug, result.text)
 
         if not (result.status_code is requests.codes.ok):
-            raise BadServerResponseException("Bad HTTP status code", result.status_code)   # Server reported error
+            raise BadServerResponseException("Bad HTTP status code", result.status_code)  # Server reported error
 
         result = result.json()
 
         if not result["ok"]:
-            raise BadtelegAPIResponseException("Telegram API sent a non OK response")   # Telegram API reported error
+            raise BadTelegAPIResponseException("Telegram API sent a non OK response")  # Telegram API reported error
 
         return result["result"]
 
-    def __methodExists(self, method):
+    def __method_exists(self, method):
         return method in self.config["telegramBotApi"]["methods"]
 
-    def __runEvent(self, event):
+    def __run_event(self, event):
         if "text" in event:
             self.on_receive_message(event)
         if "new_chat_participant" in event:
@@ -174,4 +171,3 @@ class telegbot:
             self.on_delete_chat_photo(event)
         if "group_chat_created" in event:
             self.on_group_chat_created(event)
-

@@ -31,11 +31,11 @@ telegramBotApi:
       action: get
       doc: "https://core.telegram.org/bots/api#getme"
       parameters:
-    sendMessage:
-      method: sendMessage
+    send_message:
+      method: send_message
       description: Use this method to send text messages. On success, the sent Message is returned.
       action: post
-      doc: "https://core.telegram.org/bots/api#sendMessage"
+      doc: "https://core.telegram.org/bots/api#sendmessage"
       parameters:
         chat_id:
           parameter: chat_id
@@ -249,11 +249,11 @@ telegramBotApi:
           type: dict
           required: false
           description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
-    sendChatAction:
-      method: sendChatAction
+    send_chat_action:
+      method: send_chat_action
       description: Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status).
       action: post
-      doc: "https://core.telegram.org/bots/api#sendChatAction"
+      doc: "https://core.telegram.org/bots/api#sendchataction"
       parameters:
         chat_id:
           parameter: chat_id
