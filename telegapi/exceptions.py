@@ -29,32 +29,27 @@
 ################################################################################
 
 
-
 class ConexionFailedException(Exception):
-
     def __init__(self, text):
         self.description = text
 
 
 class BadServerResponseException(Exception):
-
     def __init__(self, text, errorcode):
         self.description = text
         self.code = errorcode
 
 
 class BadTelegAPIResponseException(Exception):
-
     def __init__(self, text):
         self.description = text
 
 
 class BadParamException(Exception):
-
     def __init__(self, text):
         self.description = text
 
-class InvalidAPICallException(Exception):
 
+class InvalidAPICallException(Exception):
     def __init__(self, text):
         self.description = text

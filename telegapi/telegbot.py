@@ -42,8 +42,9 @@ from telegapi.logger import logger
 
 logger = logger()
 
-LONG_POLLING_TIMEOUT=20
-REQUEST_TIMEOUT=40    # must be greater than LONG_POLLING_TIMEOUT
+LONG_POLLING_TIMEOUT = 20
+REQUEST_TIMEOUT = 40  # must be greater than LONG_POLLING_TIMEOUT
+
 
 class telegbot:
     def __init__(self, token):
@@ -111,14 +112,13 @@ class telegbot:
             "caption": caption,
             "reply_to_message_id": reply_to_message_id,
             "reply_markup": reply_markup
-        }, files = {"photo": photo})
+        }, files={"photo": photo})
         self.__runEvent(response)
-
 
     def __void_callback(self, data={}):
         return
 
-    def __apiRequest(self, method, parameters = {}, files=None):
+    def __apiRequest(self, method, parameters={}, files=None):
         url = self.config["telegramBotApi"]["api_url"].format(token=self.getBotToken(), method=method)
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
@@ -129,16 +129,16 @@ class telegbot:
             logger.log(logger.error, "Exception in requests")
             raise ConexionFailedException(str(e))
 
-        logger.log(logger.debug,result.url)
-        logger.log(logger.debug,result.text)
+        logger.log(logger.debug, result.url)
+        logger.log(logger.debug, result.text)
 
         if not (result.status_code is requests.codes.ok):
-            raise BadServerResponseException("Bad HTTP status code", result.status_code)   # Server reported error
+            raise BadServerResponseException("Bad HTTP status code", result.status_code)  # Server reported error
 
         result = result.json()
 
         if not result["ok"]:
-            raise BadtelegAPIResponseException("Telegram API sent a non OK response")   # Telegram API reported error
+            raise BadtelegAPIResponseException("Telegram API sent a non OK response")  # Telegram API reported error
 
         return result["result"]
 
@@ -174,4 +174,3 @@ class telegbot:
             self.on_delete_chat_photo(event)
         if "group_chat_created" in event:
             self.on_group_chat_created(event)
-
