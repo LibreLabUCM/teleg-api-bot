@@ -10,7 +10,7 @@ You should probably take a look at our [Getting Started](https://github.com/Libr
 
 ## Usage
 
-Dependencies: Python 3.4, py-yaml
+Dependencies: Python 3.4, py-yaml, requests (see [requirements-dev](./requirements-dev.txt))
 
 "main.py" is the main file to run. It is an example of a bot.
 
