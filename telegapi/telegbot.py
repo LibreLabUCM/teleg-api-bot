@@ -40,7 +40,7 @@ from telegapi.logger import Logger
 logger = Logger()
 
 LONG_POLLING_TIMEOUT = 20
-REQUEST_TIMEOUT = 40  # must be greater than LONG_POLLING_TIMEOUT
+REQUEST_TIMEOUT = LONG_POLLING_TIMEOUT * 2
 
 
 class TelegBot:
