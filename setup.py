@@ -25,8 +25,7 @@ setup(
 
     },
     install_requires=[
-        'Requests',
-        'pyyaml'
+        i.strip() for i in open('requirements-dev.txt').readlines()
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
