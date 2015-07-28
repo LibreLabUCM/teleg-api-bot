@@ -121,18 +121,21 @@ class TelegBot:
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
 
         try:
-            result = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
+            response = requests.request(http_method, url, timeout=REQUEST_TIMEOUT, params=parameters, files=files)
         except requests.RequestException as e:
             logger.log(logger.error, "Exception in requests")
             raise ConnectionFailedException(str(e))
 
-        logger.log(logger.debug, result.url)
-        logger.log(logger.debug, result.text)
+        logger.log(logger.debug, response.url)
+        logger.log(logger.debug, response.text)
 
-        if not (result.status_code is requests.codes.ok):
-            raise BadServerResponseException("Bad HTTP status code", result.status_code)  # Server reported error
+        try:
+            result = response.json()
+        except ValueError:  # typo on the url, no json to decode
+            raise BadServerResponseException('Error: Invalid URL', response.status_code)
 
-        result = result.json()
+        if not (response.status_code is requests.codes.ok):
+            raise BadServerResponseException(result['description'], response.status_code)  # Server reported error
 
         if not result["ok"]:
             raise BadTelegAPIResponseException("Telegram API sent a non OK response")  # Telegram API reported error
