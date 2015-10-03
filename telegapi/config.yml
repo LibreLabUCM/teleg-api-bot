@@ -29,13 +29,13 @@ telegramBotApi:
       method: getMe
       description: A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.
       action: get
-      doc: "https://core.telegram.org/bots/api#getme"
+      doc: "https://core.telegram.org/bots/api#getMe"
       parameters:
-    send_message:
-      method: send_message
+    sendMessage:
+      method: sendMessage
       description: Use this method to send text messages. On success, the sent Message is returned.
       action: post
-      doc: "https://core.telegram.org/bots/api#sendmessage"
+      doc: "https://core.telegram.org/bots/api#sendMessage"
       parameters:
         chat_id:
           parameter: chat_id
@@ -130,6 +130,21 @@ telegramBotApi:
           type: InputFile
           required: true
           description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        duration:
+          parameter: duration
+          type: int
+          required: false
+          description: Duration of the audio in seconds
+        performer:
+          parameter: performer
+          type: String
+          required: false
+          description: Performer
+        title:
+          parameter: title
+          type: String
+          required: false
+          description: Track name
         reply_to_message_id:
           parameter: reply_to_message_id
           type: int
@@ -208,6 +223,47 @@ telegramBotApi:
           type: InputFile
           required: true
           description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        duration:
+          parameter: duration
+          type: int
+          required: false
+          description: Duration of sent video in seconds
+        caption:
+          parameter: caption
+          type: String
+          required: false
+          description: Video caption (may also be used when resending videos by file_id).
+        reply_to_message_id:
+          parameter: reply_to_message_id
+          type: int
+          required: false
+          description: If the message is a reply, ID of the original message
+        reply_markup:
+          parameter: reply_markup
+          type: dict
+          required: false
+          description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
+    sendVoice:
+      method: sendVoice
+      description: Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
+      action: post
+      doc: "https://core.telegram.org/bots/api#sendVoice"
+      parameters:
+        chat_id:
+          parameter: chat_id
+          type: int
+          required: true
+          description: Unique identifier for the message recepient. User or GroupChat id
+        voice:
+          parameter: caption
+          type: InputFile
+          required: true
+          description: Audio file to send. You can either pass a file_id as String to resend an audio that is already on the Telegram servers, or upload a new audio file using multipart/form-data.
+        duration:
+          parameter: duration
+          type: int
+          required: false
+          description: Duration of sent audio in seconds
         reply_to_message_id:
           parameter: reply_to_message_id
           type: int
@@ -249,8 +305,8 @@ telegramBotApi:
           type: dict
           required: false
           description: Additional interface options. A JSON-serialized object for a custom reply keyboard, instructions to hide keyboard or to force a reply from the user.
-    send_chat_action:
-      method: send_chat_action
+    sendChatAction:
+      method: sendChatAction
       description: Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status).
       action: post
       doc: "https://core.telegram.org/bots/api#sendchataction"
@@ -286,3 +342,14 @@ telegramBotApi:
           type: int
           required: true
           description: Limits the number of photos to be retrieved. Values between 1—100 are accepted. Defaults to 100.
+    getFile:
+      method: getFile
+      description: Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned.
+      action: get
+      doc: "https://core.telegram.org/bots/api#getFile"
+      parameters:
+        file_id:
+          parameter: file_id
+          type: String
+          required: true
+          description: File identifier to get info about
