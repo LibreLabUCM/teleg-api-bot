@@ -88,7 +88,7 @@ class TelegBot:
                 self.__run_event(update["message"])
 
     def send_message(self, chat_id, text, disable_web_page_preview=False, reply_to_message_id=None, reply_markup=None):
-        response = self.__api_request('send_message', {
+        response = self.__api_request('sendMessage', {
             "chat_id": chat_id,
             "text": text,
             "disable_web_page_preview": disable_web_page_preview,
@@ -98,7 +98,7 @@ class TelegBot:
         self.__run_event(response)
 
     def send_chat_action(self, chat_id, action):
-        response = self.__api_request('send_chat_action', {
+        response = self.__api_request('sendChatAction', {
             "chat_id": chat_id,
             "action": action
         })
@@ -116,7 +116,8 @@ class TelegBot:
         return
 
     def __api_request(self, method, parameters={}, files=None):
-        url = self.config["telegramBotApi"]["api_url"].format(token=self.get_bot_token(), method=method)
+        url = self.config["telegramBotApi"]["api_url"]\
+            .format(token=self.get_bot_token(), method=self.config["telegramBotApi"]["methods"][method]['method'])
 
         http_method = self.config["telegramBotApi"]["methods"][method]['action']
 

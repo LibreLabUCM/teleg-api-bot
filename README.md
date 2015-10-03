@@ -22,7 +22,7 @@ Example bot:
 from telegbot import TelegBot
 from logger import Logger
 logger = Logger()
-import time,json
+import time, json
 
 def receive_message(msg):
     if msg["date"] < time.time() - 2:
@@ -34,6 +34,7 @@ def receive_message(msg):
 
 bot = TelegBot('TOKEN')
 bot.on_receive_message = receive_message
+bot.connect()
 bot.run()
 
 ```
