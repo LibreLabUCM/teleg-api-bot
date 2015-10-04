@@ -6,27 +6,38 @@ Telegram Api for new bot system
 
 This project uses Python 3, so you should probably install that, if you haven't already.
 
-You should probably take a look at our [Getting Started](https://github.com/LibreLabUCM/teleg-api-bot/wiki/Getting-started-with-the-Telegram-Bot-API) wiki page.
+For an introduction to the Telegram Bot API, take a look at our [Getting Started](https://github.com/LibreLabUCM/teleg-api-bot/wiki/Getting-started-with-the-Telegram-Bot-API) wiki page.
+
+## Installation
+
+You can get it from pip:
+
+```
+$ pip install teleg-api-bot
+```
+
+Or you can go ahead and clone this repo, and install it:
+
+```
+$ python setup.py install
+```
 
 ## Usage
 
 Dependencies: Python 3.4, py-yaml, requests (see [requirements-dev](./requirements-dev.txt))
 
-"main.py" is the main file to run. It is an example of a bot.
-
 Example bot:
 
 ```python
-
 #!/usr/bin/env python3
-from telegbot import TelegBot
-from logger import Logger
+
+from telegapi.telegbot import TelegBot
+from telegapi.logger import Logger
+
 logger = Logger()
 import time, json
 
 def receive_message(msg):
-    if msg["date"] < time.time() - 2:
-        return # old
     logger.msg(msg)
     if msg["text"] == "/help":
         bot.send_message(msg["chat"]["id"], "Text")
@@ -36,6 +47,4 @@ bot = TelegBot('TOKEN')
 bot.on_receive_message = receive_message
 bot.connect()
 bot.run()
-
 ```
-
