@@ -33,10 +33,14 @@ def msg_get_summary(msg, truncate=0):
     summary = ""
 
     if 'text' in msg:
-        summary += "[Text: " +\
-                   ((msg["text"][:truncate] + '...')
-                    if (len(msg["text"]) > truncate and truncate is not 0)
-                    else msg["text"]) + "] "
+
+        message = msg["text"]
+        if (0 < truncate < len(message)):
+            summary = message[:truncate] + '...'
+        else:
+            summary = message + ']'
+
+        summary = "[Text: " + str(summary.encode('unicode_escape'))
 
     if 'new_chat_participant' in msg:
         summary += msg["new_chat_participant"]["first_name"] + " was added to " + msg["chat"]["title"] + " "
