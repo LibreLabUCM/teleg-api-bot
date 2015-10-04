@@ -66,7 +66,7 @@ class Logger:
         elif "title" in msg["chat"]:
             output = output + TC.Cyan + msg["chat"]["title"]
         elif "id" in msg["chat"]:
-            output = output + TC.Cyan + msg["chat"]["id"]
+            output = output + TC.Cyan + str(msg["chat"]["id"])
         else:
             self.log(self.error, "msg[\"chat\"] doesn't have 'username', 'title', or 'id'. msg -> " + json.dump(msg))
 
