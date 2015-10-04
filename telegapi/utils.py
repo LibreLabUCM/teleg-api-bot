@@ -28,6 +28,14 @@
 #                                                                              #
 ################################################################################
 
+import re
+
+emoji_re = re.compile(u'['
+        u'\U0001F300-\U0001F64F'
+        u'\U0001F680-\U0001F6FF'
+        u'\u2600-\u26FF\u2700-\u27BF]+',
+        re.UNICODE)
+
 
 def msg_get_summary(msg, truncate=0):
     summary = ""
@@ -35,12 +43,14 @@ def msg_get_summary(msg, truncate=0):
     if 'text' in msg:
 
         message = msg["text"]
-        if (0 < truncate < len(message)):
-            summary = message[:truncate] + '...'
-        else:
-            summary = message + ']'
+        message = re.sub(emoji_re, 'emoji', message)
 
-        summary = "[Text: " + str(summary.encode('unicode_escape'))
+        summary = "[Text: "
+
+        if (0 < truncate < len(message)):
+            summary += message[:truncate] + '...'
+        else:
+            summary += message + ']'
 
     if 'new_chat_participant' in msg:
         summary += msg["new_chat_participant"]["first_name"] + " was added to " + msg["chat"]["title"] + " "
